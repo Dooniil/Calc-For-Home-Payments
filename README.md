@@ -1,2 +1,2 @@
 Home Payments Calc
-![1.jpg]
+<img src="1.jpg" width="200" height="200"/>
