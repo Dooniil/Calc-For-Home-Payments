@@ -23,6 +23,7 @@ class ElectricFragment : Fragment() {
         val calc: Calculator = Calculator(view, Calculator.Type.ELECTRIC)
         calc.editTextListener()
         activity?.let { calc.buttonListener(it) }
+        calc.button2Listener()
 
         return view
     }
