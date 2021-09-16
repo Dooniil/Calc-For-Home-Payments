@@ -2,6 +2,7 @@ package com.example.fragments
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
 import com.example.fragments.fragments.ElectricFragment
 import com.example.fragments.fragments.WaterFragment
@@ -26,5 +27,19 @@ class MainActivity : AppCompatActivity() {
         tabs.getTabAt(0)!!.setIcon(R.drawable.ic_baseline_wb_incandescent_24)
         tabs.getTabAt(1)!!.setIcon(R.drawable.ic_baseline_waves_24)
         tabs.getTabAt(2)!!.setIcon(R.drawable.ic_baseline_local_fire_department_24)
+    }
+
+    override fun onBackPressed() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Подтверждение")
+            setMessage("Вы уверены, что хотите выйти из программы?")
+
+            setPositiveButton("Выйти") { _, _ ->
+                super.onBackPressed()
+            }
+            setNegativeButton("Остаться"){_, _ ->
+            }
+            setCancelable(true)
+        }.create().show()
     }
 }

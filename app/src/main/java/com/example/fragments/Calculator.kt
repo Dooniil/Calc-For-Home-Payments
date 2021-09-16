@@ -7,6 +7,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.FragmentActivity
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -20,6 +22,7 @@ class Calculator(private val view: View, private val type: Type) {
     private val actual: EditText = view.findViewById(R.id.actual)
     private val button: Button = view.findViewById(R.id.button)
     private val resultText: TextView = view.findViewById(R.id.result)
+    private val button2: AppCompatButton = view.findViewById(R.id.button2)
 
     fun editTextListener() {
         actual.setOnEditorActionListener { _, actionId, _ ->
@@ -32,11 +35,22 @@ class Calculator(private val view: View, private val type: Type) {
     fun buttonListener(activity: Activity) {
         button.setOnClickListener {
             calculate()
+            prev.clearFocus()
+            actual.clearFocus()
             hideSoftKeyboard(activity)
         }
     }
 
-    fun hideSoftKeyboard(activity: Activity) {
+    fun button2Listener() {
+        button2.setOnClickListener {
+            prev.text.clear()
+            actual.text.clear()
+            prev.requestFocus()
+            resultText.visibility = View.GONE
+        }
+    }
+
+    private fun hideSoftKeyboard(activity: Activity) {
         val inputMethodManager =
             activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
@@ -60,10 +74,11 @@ class Calculator(private val view: View, private val type: Type) {
         val result = when (type) {
             Type.ELECTRIC -> calcForElectric(diff)
             Type.GAS -> calcForGas(diff)
+            Type.WATER -> calcForWater(diff)
             else -> ""
         }
         resultText.visibility = View.VISIBLE
-        resultText.text = "Вам нужно заплатить - ${df.format(result)} рублей"
+        resultText.text = "Разница - $diff\nВам нужно заплатить - ${df.format(result)} рублей"
         return false
     }
 
@@ -77,6 +92,9 @@ class Calculator(private val view: View, private val type: Type) {
         return result
     }
 
+    private fun calcForWater(diff: Float) : Float {
+        return diff * 29.1f
+    }
     private fun calcForElectric(diff: Float) : Float {
         var result: Float = 0.0f
         if (diff <= 75) {

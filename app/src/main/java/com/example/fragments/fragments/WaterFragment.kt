@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.fragments.Calculator
 import com.example.fragments.R
 
 class WaterFragment : Fragment() {
@@ -17,6 +18,13 @@ class WaterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_water, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_water, container, false)
+
+        val calc: Calculator = Calculator(view, Calculator.Type.WATER)
+        calc.editTextListener()
+        activity?.let { calc.buttonListener(it) }
+        calc.button2Listener()
+
+        return view
     }
 }
