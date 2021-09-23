@@ -1,6 +1,7 @@
 package com.example.fragments
 
 import android.app.Activity
+import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -9,6 +10,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentActivity
+import com.example.fragments.fragments.State
+import kotlinx.android.parcel.Parcelize
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -18,10 +21,15 @@ class Calculator(private val view: View, private val type: Type) {
         ELECTRIC, WATER, GAS
     }
 
+    fun render(state : State) {
+        resultText.text = state.text
+        resultText.visibility = state.visibility
+    }
+
     private val prev: EditText = view.findViewById(R.id.prev)
     private val actual: EditText = view.findViewById(R.id.actual)
     private val button: Button = view.findViewById(R.id.button)
-    private val resultText: TextView = view.findViewById(R.id.result)
+    val resultText: TextView = view.findViewById(R.id.result)
     private val button2: AppCompatButton = view.findViewById(R.id.button2)
 
     fun editTextListener() {
@@ -35,18 +43,19 @@ class Calculator(private val view: View, private val type: Type) {
     fun buttonListener(activity: Activity) {
         button.setOnClickListener {
             calculate()
+            hideSoftKeyboard(activity)
             prev.clearFocus()
             actual.clearFocus()
-            hideSoftKeyboard(activity)
         }
     }
 
-    fun button2Listener() {
+    fun button2Listener(activity: Activity) {
         button2.setOnClickListener {
             prev.text.clear()
             actual.text.clear()
             prev.requestFocus()
             resultText.visibility = View.GONE
+            showSoftKeyboard(activity)
         }
     }
 
@@ -54,6 +63,11 @@ class Calculator(private val view: View, private val type: Type) {
         val inputMethodManager =
             activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
+    }
+    private fun showSoftKeyboard(activity: Activity) {
+        val inputMethodManager =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(prev, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun calculate() : Boolean {
